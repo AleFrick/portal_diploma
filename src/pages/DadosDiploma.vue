@@ -1,9 +1,10 @@
 <template>      
   <div>
     <b-container>        
-        <h1>Buscar Diploma</h1>
-        <b-input-group class="mt-3" id='g_pesquisa' >
-            <b-form-input v-model="codigo" v-on:keyup='buscar'></b-form-input>
+        <h1>Diploma Digital</h1>
+        <b-input-group class="mt-3" id='g_pesquisa' >                 
+            <label for='inputCod'>Código</label>
+            <b-form-input id='inputCod' v-model="codigo" v-on: v-on:keyup='buscar'></b-form-input>
             <b-input-group-append>
                 <b-button v-on:click='buscar' variant="outline-success">Buscar</b-button>
                 <b-button v-on:click='cancelar' variant="outline-danger">Cancelar</b-button>                
@@ -69,8 +70,7 @@
         </div>
     </b-container>
   </div>
-</template>
-
+</template> 
 <script>
 import axios from 'axios'
 
@@ -80,33 +80,29 @@ export default {
     return {
       msg: 'Welcome to Your Vue.js App',
       dDisable: '',
-      codigo: 'Maria',
+      codigo: '',
       items: { nome: 'Alex Sandro Frick Schmidt', cpf: '****230.310***',curso: '1105218    - Curso de Ciências - Matemática - Noturno - Araguaína', dt_ingresso: '02/08/2001',dt_conclusao: '20/12/2005', dt_public_dip: '20/12/2005', sit_diploma: 'registrado', nome_expedidora: 'Universidade Federal do Tocantins', dt_expedicao: '13/03/2013', num_expedicao: '203717', nome_registradora: 'Universidade Federal do Tocantins', num_registro: '9278', dt_registro: '13/03/2013'}
     }
   },
   methods: {
-    buscar: function (event) {
-        if(event.key === 'Enter'){
-            if(this.codigo.length > 0){
-                this.dDisable = true               
-            }else{          
-                this.dDisable = false
-            }
+    buscar: function( event) {
+      if(event.key === 'Enter'){
+        if(this.codigo.length > 0){
+          this.dDisable = true               
+        }else{          
+          this.dDisable = false
         }
+      }
     },
-    cancelar: function(event) {
-        this.codigo = ''
-        this.dDisable = false
+    cancelar: function( event) {
+      this.codigo = ''
+      this.dDisable = false
     },
-    teste: function(event){
-        axios
-        .get('https://api.coindesk.com/v1/bpi/currentprice.json')
-        .then(response => ( console.log(response.data) ))
+    teste: function( event){  
+      axios.get('https://api.coindesk.com/v1/bpi/currentprice.json').then(response => (console.log(response.data)))
     }
   },
-  components: {
-      axios
-  }
+  components: {axios}
 }
 
 </script>
