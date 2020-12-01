@@ -3,10 +3,10 @@
     <b-container>        
         <h1>Buscar Diploma</h1>
         <b-input-group class="mt-3" id='g_pesquisa' >
-            <b-form-input v-model="codigo"></b-form-input>
+            <b-form-input v-model="codigo" v-on:keyup='buscar'></b-form-input>
             <b-input-group-append>
-                <b-button v-on:click='ola' variant="outline-success">Buscar</b-button>
-                <b-button v-on:click='cancelar' variant="outline-danger">Cancelar</b-button>
+                <b-button v-on:click='buscar' variant="outline-success">Buscar</b-button>
+                <b-button v-on:click='cancelar' variant="outline-danger">Cancelar</b-button>                
             </b-input-group-append>
         </b-input-group>
         <div v-if="dDisable == true ">
@@ -72,6 +72,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'DadosDiploma',
   data () {
@@ -83,19 +85,27 @@ export default {
     }
   },
   methods: {
-    ola: function (event) {
-      if(this.codigo.length > 0){
-          this.dDisable = true
-          console.log('sim')          
-      }else{
-          console.log('nao')
-          this.dDisable = false
-      }
+    buscar: function (event) {
+        if(event.key === 'Enter'){
+            if(this.codigo.length > 0){
+                this.dDisable = true               
+            }else{          
+                this.dDisable = false
+            }
+        }
     },
     cancelar: function(event) {
         this.codigo = ''
         this.dDisable = false
+    },
+    teste: function(event){
+        axios
+        .get('https://api.coindesk.com/v1/bpi/currentprice.json')
+        .then(response => ( console.log(response.data) ))
     }
+  },
+  components: {
+      axios
   }
 }
 
