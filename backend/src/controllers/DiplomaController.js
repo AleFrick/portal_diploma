@@ -9,10 +9,7 @@ const connection  = require("../database/connection");
 //Exportará um objeto
 module.exports = {
     index(req, res) {
-        let {codigo} = req.query
-    
-        console.log(codigo + ' ale');
-
+        let codigo = req.params.codigo        
         ibmdb.open(connection, function (err, connection) {
             if (err) {
                 console.log(err);
@@ -35,10 +32,12 @@ module.exports = {
                                 when coalesce(O.CODIGO_EMEC, '') = '' then  O.NOME_UNIDADE
                                 else coalesce(O.CODIGO_EMEC, '') || ' - ' || O.NOME_UNIDADE     
                         end as EMEC_REGISTRADORA, 
+
                         case
                             when p.nome_social is null then p.nome_pessoa 
                             else p.nome_social 
-                        end as nome_pessoa,
+                        end as NOME_PESSOA,
+                        
                         '****' || SUBSTR( DOC2.NUMERO_DOCUMENTO , 5 , 7 ) || '***' as CPF,
                         RE.ID_DOCUMENTO AS NUM_EXPEDICAO,
                         ORG.NOME_UNIDADE AS CURSO,
@@ -68,14 +67,13 @@ module.exports = {
                     WHERE AD.CODIGO_VALIDACAO = ${codigo}
                 `;
 
-//            connection.query(`SELECT * FROM USUARIOS WHERE ID_USUARIO ='${1}' FETCH FIRST 1 ROW ONLY`, function (err1, rows) {
             connection.query(qry, function (err1, rows) {
                 if (err1) {
                     console.log("Erro na connection Query " + err1);
                 } else {
                     if(Object.keys(rows).length > 0){
-                       const user =  rows                        
-                       return res.json(user);
+                    const user =  rows                        
+                    return res.json(user);
                     }else{
                         res.json({ message:"Diploma não encontrado" });
                     } 
@@ -84,6 +82,6 @@ module.exports = {
                     if (err2) console.log(err2);
                 });
             });
-        });
+        });        
     }
 };

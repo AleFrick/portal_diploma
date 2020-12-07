@@ -1,27 +1,21 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/pages/Home'
 import DadosDiploma from '@/pages/DadosDiploma'
-import Sobre from '@/pages/Sobre'
+import DadosLinkUnico from '@/pages/DadosLinkUnico'
 
 Vue.use(Router)
 
 export default new Router({
-  routes: [
+  routes: [    
     {
-      path: '/',
-      name: 'Home',
-      component: Home
-    },
-    {
-      path: '/diploma',
+      path: '/diploma/',
       name: 'DadosDiploma',
       component: DadosDiploma
     },
     {
-      path: '/sobre',
-      name: 'Sobre',
-      component: Sobre
+      path: '/:codigo',
+      name: 'DadosLinkUnico',
+      component: DadosLinkUnico
     }
   ]
 })

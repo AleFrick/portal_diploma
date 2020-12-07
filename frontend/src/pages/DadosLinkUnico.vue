@@ -1,18 +1,7 @@
-<template>      
-  <div>
-    <b-container>        
-        <h1>Diploma Digital</h1>
-        <b-row class='reutnDados'>
-            <!-- <label for='inputCod'>Código</label> -->
-            <b-input-group class="mt-3" id='g_pesquisa' >            
-                <b-form-input id='inputCod' v-model="codigo" v-on:keyup='onKeyPress' placeholder="Código"></b-form-input>
-                <b-input-group-append>
-                    <b-button v-on:click='buscar' variant="outline-success">Buscar</b-button>
-                    <b-button v-on:click='cancelar' variant="outline-danger">Cancelar</b-button>                
-                </b-input-group-append>
-            </b-input-group>
-        </b-row>
-        <div v-if="dDisable == true ">
+<template>
+    <div>
+        <b-container>
+            <!-- {{this.$route.params.codigo}}  -->
             <b-row class='line_dip'>
                 <b-col class="returnDados" lg='3'>   
                     <label for="inputNome">Nome</label>             
@@ -69,65 +58,52 @@
                     <b-form-input id='inputDtReg' v-model="items.dt_registro" disabled></b-form-input>
                 </b-col>
             </b-row>
-        </div>
-    </b-container>      
-  </div>
-</template> 
+        </b-container>
+    </div>
+</template>
 <script>
-import axios from 'axios'
-
-export default {
-  name: 'DadosDiploma',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App',
-      dDisable: '',
-      codigo: '',
-      items: { nome: 'Alex Sandro Frick Schmidt', cpf: '****230.310***',curso: '1105218    - Curso de Ciências - Matemática - Noturno - Araguaína', dt_ingresso: '02/08/2001',dt_conclusao: '20/12/2005', dt_public_dip: '20/12/2005', sit_diploma: 'registrado', nome_expedidora: 'Universidade Federal do Tocantins', dt_expedicao: '13/03/2013', num_expedicao: '203717', nome_registradora: 'Universidade Federal do Tocantins', num_registro: '9278', dt_registro: '13/03/2013'}     
-    }
-  },
-  methods: {
-    buscar: function( event) {                  
-        if(this.codigo.length > 0){
-            this.dDisable = true               
-        }else{          
-            this.dDisable = false       
-            this.makeToast('default','Insira o código do diploma.','Aviso.')            
-        }
-    },
-    cancelar: function( event) {
-      this.codigo = ''
-      this.dDisable = false
-    },
-    teste: function( event){  
-      axios.get('https://api.coindesk.com/v1/bpi/currentprice.json').then(response => (console.log(response.data)))
-    },
-    makeToast(variant = null, MSG, Title) {
-        this.$bvToast.toast(MSG, {
-          title: Title,
-          variant: variant,
-          solid: true
-        })
-    },
-    onKeyPress(event){
-        if(event.key === 'Enter'){
-            this.buscar()
-        }else if(event.key === 'Escape'){
-            this.cancelar()
-        }
-    }
-  },
-  components: {axios}
-}
+    import axios from 'axios'
+    export default {
+        name: 'DadosLinkUnico',
+        data () {
+            return {
+                items: { nome: 'Alex Sandro Frick Schmidt', cpf: '****230.310***',curso: '1105218    - Curso de Ciências - Matemática - Noturno - Araguaína', dt_ingresso: '02/08/2001',dt_conclusao: '20/12/2005', dt_public_dip: '20/12/2005', sit_diploma: 'registrado', nome_expedidora: 'Universidade Federal do Tocantins', dt_expedicao: '13/03/2013', num_expedicao: '203717', nome_registradora: 'Universidade Federal do Tocantins', num_registro: '9278', dt_registro: '13/03/2013'}     
+            }
+        },        
+        created() {
+            this.buscaDados()
+        },
+        methods: {
+            buscaDados: function(){
+                
+                // REMOVER QUANDO ESTIER NA EMPRESA
+                axios.get(`https://192.168.1.118:3333/diploma/${this.$route.params.codigo}`)                
+                .then(function(response){
+                    if(response.data.ID_CURSO_AUNO || response.status === 200){
+                        this.nome = response.data.NOME_PESSOA
+                        this.cpf = response.data.CPF
+                        this.curso = `${response.data.EMEC_CURSO} - ${response.data.CURSO}`
+                        this.dt_ingresso = response.data.DT_INGRESSO
+                        this.dt_public_dip = response.data.DT_CONCLUSAO
+                        this.sit_diploma = response.data.SITUACAO
+                        this.nome_expedidora = `${response.data.EMEC_EXPEDIDORA} - ${response.data.EXPEDIDORA_DIPLOMA}`
+                        this.dt_expedicao = response.data.DT_EXP_DIPLOMA
+                        this.num_expedicao = response.data.NUM_EXPEDICAO
+                        this.nome_registradora = `${response.data.EMEC_REGISTRADORA} - ${response.data.REGISTRADORA_DIPLOMA}`
+                        this.dt_registro = response.data.DT_REGISTRO
+                        this.num_registro = response.data.NUM_REGISTRO
+                    }                    
+                }); 
+            }
+        },
+        components:{axios}
+    }    
 </script>
 <style scoped>
-#g_pesquisa {
-    margin-bottom: 30px;
-  }
-.line_dip {
-    margin-bottom: 10px;
-}
-.returnDados {
-    text-align: left;
-}
+    .line_dip {
+        margin-bottom: 10px;
+    }
+    .returnDados {
+        text-align: left;
+    }
 </style>
