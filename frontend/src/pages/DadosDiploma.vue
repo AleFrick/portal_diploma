@@ -86,11 +86,15 @@ export default {
       items: { nome: '', cpf: '',curso: '', dt_ingresso: '',dt_conclusao: '', dt_public_dip: '', sit_diploma: '', nome_expedidora: '', dt_expedicao: '', num_expedicao: '', nome_registradora: '', num_registro: '', dt_registro: ''}     
     }
   },
+  mounted (){
+    console.log(process.env.ROOT_API )
+  },
   methods: {
     buscar: function( event) {                  
         if(this.codigo.length > 0){            
-            var vm = this;                       
-                axios.get(`http://192.168.1.118:3333/diploma/${this.codigo}`)                           
+            var vm = this;
+                                      
+                axios.get(process.env.ROOT_API.concat(`diploma/${this.codigo}`))
                 .then(function(response){                    
                     if(response.status === 200 && !response.data.message){                        
                         vm.dDisable = true

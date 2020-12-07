@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index.js",
+    "prod": "pm2 start src/index.js",
     "test": "jest"
   },
   "license": "MIT",

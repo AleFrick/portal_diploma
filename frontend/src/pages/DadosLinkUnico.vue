@@ -85,8 +85,8 @@ export default {
     methods: {
         buscaDados: function(){
             // REMOVER QUANDO ESTIER NA EMPRESA    
-            var vm = this;                       
-            axios.get(`http://192.168.1.118:3333/diploma/${this.$route.params.codigo}`)                           
+            var vm = this;                                   
+            axios.get(process.env.ROOT_API.concat(`diploma/${this.$route.params.codigo}`))
             .then(function(response){                    
                 if(response.status === 200 && !response.data.message){     
                     vm.dDisable = true                   
