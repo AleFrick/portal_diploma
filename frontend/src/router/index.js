@@ -6,7 +6,7 @@ import DadosLinkUnico from '@/pages/DadosLinkUnico'
 Vue.use(Router)
 
 export default new Router({
-  routes: [    
+  routes: [       
     {
       path: '/diploma/',
       name: 'DadosDiploma',

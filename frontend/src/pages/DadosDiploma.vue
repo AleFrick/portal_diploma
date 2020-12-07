@@ -83,24 +83,45 @@ export default {
       msg: 'Welcome to Your Vue.js App',
       dDisable: '',
       codigo: '',
-      items: { nome: 'Alex Sandro Frick Schmidt', cpf: '****230.310***',curso: '1105218    - Curso de Ciências - Matemática - Noturno - Araguaína', dt_ingresso: '02/08/2001',dt_conclusao: '20/12/2005', dt_public_dip: '20/12/2005', sit_diploma: 'registrado', nome_expedidora: 'Universidade Federal do Tocantins', dt_expedicao: '13/03/2013', num_expedicao: '203717', nome_registradora: 'Universidade Federal do Tocantins', num_registro: '9278', dt_registro: '13/03/2013'}     
+      items: { nome: '', cpf: '',curso: '', dt_ingresso: '',dt_conclusao: '', dt_public_dip: '', sit_diploma: '', nome_expedidora: '', dt_expedicao: '', num_expedicao: '', nome_registradora: '', num_registro: '', dt_registro: ''}     
     }
   },
   methods: {
     buscar: function( event) {                  
-        if(this.codigo.length > 0){
-            this.dDisable = true               
+        if(this.codigo.length > 0){            
+            var vm = this;                       
+                axios.get(`http://192.168.1.118:3333/diploma/${this.codigo}`)                           
+                .then(function(response){                    
+                    if(response.status === 200 && !response.data.message){                        
+                        vm.dDisable = true
+                        vm.items.nome = response.data.NOME_PESSOA
+                        vm.items.cpf = response.data.CPF
+                        vm.items.curso = `${response.data.EMEC_CURSO} - ${response.data.CURSO}`
+                        vm.items.dt_ingresso = response.data.DT_INGRESSO
+                        vm.items.dt_public_dip = response.data.DT_CONCLUSAO
+                        vm.items.sit_diploma = response.data.SITUACAO
+                        vm.items.nome_expedidora = `${response.data.EMEC_EXPEDIDORA} - ${response.data.EXPEDIDORA_DIPLOMA}`
+                        vm.items.dt_expedicao = response.data.DT_EXP_DIPLOMA
+                        vm.items.num_expedicao = response.data.NUM_EXPEDICAO
+                        vm.items.nome_registradora = `${response.data.EMEC_REGISTRADORA} - ${response.data.REGISTRADORA_DIPLOMA}`
+                        vm.items.dt_registro = response.data.DT_REGISTRO
+                        vm.items.num_registro = response.data.NUM_REGISTRO                        
+                    }else{                                                                    
+                        vm.dDisable = false
+                        vm.makeToast('default', 'Diploma não encontrado','Atenção')
+                    }                  
+                    
+                }).catch(function(error) {
+                    alert(error);
+                });
         }else{          
-            this.dDisable = false       
-            this.makeToast('default','Insira o código do diploma.','Aviso.')            
+            vm.dDisable = false       
+            vm.makeToast('default','Insira o código do diploma.','Atenção')            
         }
     },
     cancelar: function( event) {
       this.codigo = ''
       this.dDisable = false
-    },
-    teste: function( event){  
-      axios.get('https://api.coindesk.com/v1/bpi/currentprice.json').then(response => (console.log(response.data)))
     },
     makeToast(variant = null, MSG, Title) {
         this.$bvToast.toast(MSG, {
@@ -116,7 +137,7 @@ export default {
             this.cancelar()
         }
     }
-  },
+  },    
   components: {axios}
 }
 </script>

@@ -18,6 +18,7 @@ module.exports = {
             
             let qry =
                 ` select
+                        CA.ID_CURSO_ALUNO,
                         case
                             when coalesce(C.CODIGO_EMEC, '')  = '' then ORG.NOME_UNIDADE
                             else coalesce(C.CODIGO_EMEC, '')  || ' - ' || ORG.NOME_UNIDADE
@@ -52,7 +53,7 @@ module.exports = {
                             T1.DESCRICAO AS SITUACAO   
                     from  
                         ALUNOS_DIPLOMAS AD      
-                        JOIN cursos_alunos CA on ( CA.ID_CURSO_ALUNO = AD.ID_CURSO_ALUNO )
+                        JOIN CURSOS_ALUNOS CA on ( CA.ID_CURSO_ALUNO = AD.ID_CURSO_ALUNO )
                         JOIN REGISTRO_DIPLOMAS RE ON ( CA.ID_CURSO_ALUNO = RE.ID_CURSO_ALUNO )
                         
                         JOIN alunos a ON A.ID_ALUNO = CA.ID_ALUNO
@@ -62,8 +63,7 @@ module.exports = {
                         JOIN CURSOS C ON VC.ID_CURSO = C.ID_CURSO
                         JOIN ORG_INSTITUICAO ORG ON C.ID_UNIDADE = ORG.ID_UNIDADE                          
                         LEFT JOIN DOC_PESSOAS DOC2 ON P.ID_PESSOA = DOC2.ID_PESSOA AND DOC2.ID_TDOC_PESSOA = 1   --CPF
-                        LEFT JOIN TAB_ESTRUTURADA T1 ON ( T1.COD_TABELA = RE.SITUACAO_TAB AND T1.ITEM_TABELA = RE.SITUACAO_ITEM )                    
-                    
+                        LEFT JOIN TAB_ESTRUTURADA T1 ON ( T1.COD_TABELA = RE.SITUACAO_TAB AND T1.ITEM_TABELA = RE.SITUACAO_ITEM )                                        
                     WHERE AD.CODIGO_VALIDACAO = ${codigo}
                 `;
 
@@ -73,9 +73,11 @@ module.exports = {
                 } else {
                     if(Object.keys(rows).length > 0){
                     const user =  rows                        
-                    return res.json(user);
+                    
+                    return res.status(200).json(user[0]);
+
                     }else{
-                        res.json({ message:"Diploma não encontrado" });
+                        res.status(200).json({ message:"Diploma não encontrado" });
                     } 
                 }
                 connection.close(function (err2) {
